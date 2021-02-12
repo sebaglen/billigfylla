@@ -1,7 +1,7 @@
 interface Alko {
     name: string;
     volume: number;
-    alocholContent: number;
+    alcoholContent: number;
     price: number;
 }
 
