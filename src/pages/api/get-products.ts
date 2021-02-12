@@ -12,10 +12,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
     if (req.method === 'GET') {
-        fetch('https://apis.vinmonopolet.no/products/v0/details-normal?maxResults=100', { headers: {'Ocp-Apim-Subscription-Key': VIN_API_KEY}})
+        fetch('https://apis.vinmonopolet.no/products/v0/details-normal?maxResults=1000', { headers: {'Ocp-Apim-Subscription-Key': VIN_API_KEY}})
         .then(data => data.json())
         .then((data: APIAlko[]) => {
-            const alkohyler: Alko[] = data.map(alk => {
+            const alkohyler: Alko[] = data.filter(alk => alk.basic.alcoholContent > 0).map(alk => {
                 const price = alk.prices[0]?.salesPrice;
                 const name = alk.basic.productShortName;
                 const volume = alk.basic.volume;
