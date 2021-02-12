@@ -3,6 +3,8 @@ interface Alko {
     volume: number;
     alcoholContent: number;
     price: number;
+    alkPerNOK: number;
+    productId: string;
 }
 
 interface APIAlko {
@@ -10,6 +12,7 @@ interface APIAlko {
         productShortName: string;
         volume: number;
         alcoholContent: number;
+        productId: string;
     }
     prices: {
         salesPrice: number;
