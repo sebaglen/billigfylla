@@ -2,6 +2,8 @@ import {
   Text,
   List,
   ListItem,
+  Box,
+  Spinner,
 } from '@chakra-ui/react'
 
 import { Container } from '../components/Container'
@@ -13,15 +15,29 @@ import AlkoCard from '../components/AlkoCard'
 
 const Index = () => {
   const [alkohyler, setAlkohyler] = useState<Alko[]>([])
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // setIsLoading(true);
+    setIsLoading(true);
     fetch('/api/get-products?limit=50')
       .then(res => res.json())
       .then(res => setAlkohyler(res))
-      // .then(() => setIsLoading(false))
+      .then(() => setIsLoading(false))
   }, [])
+
+  if(isLoading) {
+    return (
+    <Box 
+      width="100vw" 
+      height="100vh" 
+      display="flex" 
+      justifyContent="space-around" 
+      alignItems="center"
+    >
+      <Spinner />
+    </Box>
+    )
+  }
 
   return (<Container height="100vh">
     <Main maxHeight="100%" >
