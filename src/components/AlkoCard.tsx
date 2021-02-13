@@ -10,7 +10,7 @@ export const AlkoCard = ({ alko, isMain = false }: { alko?: Alko, isMain?: boole
         </Box>
     }
 
-    return <Box borderWidth="1px" borderRadius="lg" p="3" boxShadow={isMain ? "lg" : "sm"}>
+    return <Box borderWidth="1px" borderRadius="lg" p="3" boxShadow={isMain ? "lg" : "sm"} bg="white">
         <Stack direction="row" alignItems={'center'}>
             <Box padding='0 20px 0 20px'>
                 <Image src={`https://bilder.vinmonopolet.no/cache/300x300-0/${alko.productId}-1.jpg`} objectFit={'contain'} width={isMain ? 50 : 35} height={isMain ? 150 : 75}/>

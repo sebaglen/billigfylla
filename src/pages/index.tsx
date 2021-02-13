@@ -14,11 +14,13 @@ import AlkoCard from '../components/AlkoCard'
 import TopAlko from '../components/TopAlko'
 import StickyHeader from '../components/StickyHeader'
 import Content from '../components/Content'
+import SearchBar from '../components/SearchBar'
 
 
 const Index = () => {
   const [alkohyler, setAlkohyler] = useState<Alko[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,15 +52,17 @@ const Index = () => {
         </Heading>
       </StickyHeader>
       <Main mt="4.5rem" alignItems="center">
-        <Stack bg="brand" width="full" alignItems="center">
+        <Stack bg="brand" width="full" alignItems="center" pb="20" mb="-20">
           <Content pt="4.5rem" >
             <TopAlko alko={alkohyler[0]}/>
+            <SearchBar query={searchQuery} onSearch={setSearchQuery} />
           </Content>
         </Stack>
         <Content>
-          <List spacing={3} my={0} display="relative" height="100%" >
+          <List spacing={3} my={0} display="relative" height="100%" pb="10">
             {alkohyler
               .slice(1)
+              .filter(alko => alko.name.match(new RegExp(searchQuery, 'gi')))
               .map((alko => (
                 <ListItem key={alko.productId}>
                   <AlkoCard alko={alko} />
@@ -71,4 +75,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default Index;
