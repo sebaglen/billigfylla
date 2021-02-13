@@ -18,6 +18,7 @@ export const AlkoCard = ({ alko, isMain = false }: { alko?: Alko, isMain?: boole
             <Box>
                 <Heading size={isMain ? "lg" : "md"}>{alko.name}</Heading>
                 <Text>NOK pr alkoliter: {alko.alkPerNOK.toFixed(2)},-</Text>
+                <Text>{alko.type}</Text>
                 <Button as="a" href={`http://www.vinmonopolet.no/vareutvalg/varedetaljer/sku-${alko.productId}`}>Vis på Vinmonopolet</Button>
             </Box>
         </Stack>

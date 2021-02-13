@@ -22,13 +22,15 @@ const fetchAlko = (apiKey: string) => fetch(`https://apis.vinmonopolet.no/produc
         const volume = alk.basic.volume;
         const alcoholContent = alk.basic.alcoholContent;
         const productId = alk.basic.productId;
+        const type = alk.classification.mainProductTypeName;
         return {
             productId,
             price,
             name, 
             volume, 
             alcoholContent,
-            alkPerNOK: alkisKalkis(price, volume, alcoholContent)
+            alkPerNOK: alkisKalkis(price, volume, alcoholContent),
+            type,
         }
     }).sort(sortByAlkPerNOK);
     lastUpdated = Date.now();
