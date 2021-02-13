@@ -24,18 +24,18 @@ const Index = () => {
   }, [])
 
   return (<Container height="100vh">
-    <Main>
+    <Main maxHeight="100%" >
       <Text>
         Billigste alkis
       </Text>
 
       <AlkoCard alko={alkohyler[0]} isMain/>
 
-      <List spacing={3} my={0} >
+      <List spacing={3} my={0} display="relative" height="100%" overflow="auto" >
         {alkohyler
           .slice(1)
           .map((alko => (
-            <ListItem>
+            <ListItem key={alko.productId}>
               <AlkoCard alko={alko} />
             </ListItem>
           )))}
