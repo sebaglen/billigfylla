@@ -1,17 +1,19 @@
 import {
-  Text,
   List,
   ListItem,
   Box,
   Spinner,
+  Heading,
+  Stack
 } from '@chakra-ui/react'
 
 import { Container } from '../components/Container'
 import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import React, { useEffect, useState } from 'react'
 import AlkoCard from '../components/AlkoCard'
 import TopAlko from '../components/TopAlko'
+import StickyHeader from '../components/StickyHeader'
+import Content from '../components/Content'
 
 
 const Index = () => {
@@ -40,27 +42,32 @@ const Index = () => {
     )
   }
 
-  return (<Container height="100vh">
-    <Main maxHeight="100%" >
-      <Text>
-        Billigste alkis
-      </Text>
-
-      <TopAlko alko={alkohyler[0]} />
-
-      <List spacing={3} my={0} display="relative" height="100%" overflow="auto" >
-        {alkohyler
-          .slice(1)
-          .map((alko => (
-            <ListItem key={alko.productId}>
-              <AlkoCard alko={alko} />
-            </ListItem>
-          )))}
-      </List>
-    </Main>
-
-    <DarkModeSwitch />
-  </Container>
+  return (
+    <Container height="100vh">
+      <StickyHeader>
+        <Heading size="md">
+          Billigfylla
+        </Heading>
+      </StickyHeader>
+      <Main mt="4.5rem" alignItems="center">
+        <Stack bg="brand" width="full" alignItems="center">
+          <Content pt="4.5rem" >
+            <TopAlko alko={alkohyler[0]}/>
+          </Content>
+        </Stack>
+        <Content>
+          <List spacing={3} my={0} display="relative" height="100%" >
+            {alkohyler
+              .slice(1)
+              .map((alko => (
+                <ListItem key={alko.productId}>
+                  <AlkoCard alko={alko} />
+                </ListItem>
+              )))}
+          </List>
+        </Content>
+      </Main>
+    </Container>
   )
 }
 

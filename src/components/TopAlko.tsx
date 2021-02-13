@@ -1,11 +1,13 @@
-import { Text, Box, Heading, Button, Stack, useColorModeValue } from "@chakra-ui/react"
+import { Text, Box, Heading, Button, Stack, BoxProps } from "@chakra-ui/react"
 import Image from 'next/image';
 import React from "react";
 
-export const AlkoCard = ({ alko }: { alko: Alko}) => {
-    const bg = useColorModeValue("green.200", "green.800")
+interface AlkoCardProps extends BoxProps {
+    alko: Alko;
+}
 
-    return <Box background={bg} padding={5}>
+export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => {
+    return <Box padding={5} {...rest}>
         <Stack alignItems={'center'} spacing={0}>
             <Box textAlign="center">
                 <Heading size="xl">{alko.alkPerNOK.toFixed(0)} kr/l</Heading>
@@ -19,7 +21,7 @@ export const AlkoCard = ({ alko }: { alko: Alko}) => {
             </Box>
             <Box alignItems="center" justifyContent="space-around" display="flex" padding={50}>
                 <div className="sale-shape rotate" />
-                <Image src={`https://bilder.vinmonopolet.no/cache/300x300-0/${alko.productId}-1.jpg`} objectFit={'contain'} width={100} height={150}/>
+                <Image loading="eager" src={`https://bilder.vinmonopolet.no/cache/300x300-0/${alko.productId}-1.jpg`} objectFit={'contain'} width={100} height={150}/>
             </Box>
             <Button as="a" href={`http://www.vinmonopolet.no/vareutvalg/varedetaljer/sku-${alko.productId}`}>Vis på Vinmonopolet</Button>
         </Stack>
