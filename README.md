@@ -1,6 +1,8 @@
 # Billigfylla
 ## A Next JS web app helping you get whasted for cheap
 
+#### You can visit the application on [billigfylla.vercel.app](https://billigfylla.vercel.app/)
+
 ## Requirements
 * `NPM` or `Yarn`
 * `Node 14 or newer`
@@ -19,5 +21,5 @@ yarn dev
 npm run dev
 ```
 
-# Created by
+#### Created by
 [Sebastian Aglen Danielsen](https://github.com/sebaglen) and [Morten Hillbom](https://github.com/mortenhillbom)
