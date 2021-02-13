@@ -1,9 +1,9 @@
-# Billigfylla. A Next JS web app helping you get whasted for cheap
+# Billigfylla
+## A Next JS web app helping you get whasted for cheap
 
 ## Requirements
 * `NPM` or `Yarn`
 * `Node 14 or newer`
-
 
 ## How to run
 ```bash
@@ -20,5 +20,4 @@ npm run dev
 ```
 
 # Created by
-[Sebastian Aglen Danielsen](https://github.com/sebaglen)
-[Morten Hillbom](https://github.com/mortenhillbom)
+[Sebastian Aglen Danielsen](https://github.com/sebaglen) and [Morten Hillbom](https://github.com/mortenhillbom)
