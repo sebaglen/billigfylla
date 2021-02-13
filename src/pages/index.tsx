@@ -17,7 +17,7 @@ const Index = () => {
 
   useEffect(() => {
     // setIsLoading(true);
-    fetch('/api/get-products')
+    fetch('/api/get-products?limit=50')
       .then(res => res.json())
       .then(res => setAlkohyler(res))
       // .then(() => setIsLoading(false))

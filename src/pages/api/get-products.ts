@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 const VIN_API_KEY = process.env.VINMONOPOLET_API_KEY
 const FETCH_INTERVAL = 1000 * 60 * 10;
+const MAX_RESULTS = 10000;
 
 const alkisKalkis = (price: number, volume: number, alcoholContent: number) => {
     return price/(volume*alcoholContent/100);
@@ -11,7 +12,7 @@ const sortByAlkPerNOK = (alkoA: Alko, alkoB: Alko) => alkoA.alkPerNOK - alkoB.al
 let cachedAlkohyler: Alko[] = [];
 let lastUpdated = Date.now();
 
-const fetchAlko = (apiKey: string) => fetch('https://apis.vinmonopolet.no/products/v0/details-normal?maxResults=100', { headers: {'Ocp-Apim-Subscription-Key': apiKey}})
+const fetchAlko = (apiKey: string) => fetch(`https://apis.vinmonopolet.no/products/v0/details-normal?maxResults=${MAX_RESULTS}`, { headers: {'Ocp-Apim-Subscription-Key': apiKey}})
 .then(data => data.json())
 .then((data: APIAlko[]) => {
     console.log('i fetched')
@@ -40,9 +41,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
     if (req.method === 'GET') {
+        const offset = req.query.offset ? Number(req.query.offset) : 0;
+        const limit = (req.query.limit ? Number(req.query.limit) : 25) + offset;
+
         if(!cachedAlkohyler.length) {
             return fetchAlko(VIN_API_KEY).then(alkohyler =>
-                res.status(200).json(alkohyler)
+                res.status(200).json(alkohyler.slice(offset, limit))
             )
         }
 
@@ -50,6 +54,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             fetchAlko(VIN_API_KEY)
         }
 
-        res.status(200).json(cachedAlkohyler);
+        res.status(200).json(cachedAlkohyler.slice(offset, limit));
     }
 }
