@@ -13,14 +13,14 @@ import AlkoCard from '../components/AlkoCard'
 
 const Index = () => {
   const [alkohyler, setAlkohyler] = useState<Alko[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     fetch('/api/get-products')
       .then(res => res.json())
       .then(res => setAlkohyler(res))
-      .then(() => setIsLoading(false))
+      // .then(() => setIsLoading(false))
   }, [])
 
   return (<Container height="100vh">
