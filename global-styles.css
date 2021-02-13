@@ -1,0 +1,36 @@
+.sale-shape {
+  background: white;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  text-align: center;
+}
+.sale-shape:before,
+.sale-shape:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 150px;
+  width: 150px;
+  background: white;
+}
+.sale-shape:before {
+  transform: rotate(30deg);
+}
+.sale-shape:after {
+  transform: rotate(60deg);
+}
+
+.rotate {
+  animation: rotation 5s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

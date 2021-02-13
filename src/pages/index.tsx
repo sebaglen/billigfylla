@@ -11,6 +11,7 @@ import { Main } from '../components/Main'
 import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import React, { useEffect, useState } from 'react'
 import AlkoCard from '../components/AlkoCard'
+import TopAlko from '../components/TopAlko'
 
 
 const Index = () => {
@@ -45,7 +46,7 @@ const Index = () => {
         Billigste alkis
       </Text>
 
-      <AlkoCard alko={alkohyler[0]} isMain/>
+      <TopAlko alko={alkohyler[0]} />
 
       <List spacing={3} my={0} display="relative" height="100%" overflow="auto" >
         {alkohyler
