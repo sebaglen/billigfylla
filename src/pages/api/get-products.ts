@@ -4,6 +4,14 @@ const VIN_API_KEY = process.env.VINMONOPOLET_API_KEY;
 const FETCH_INTERVAL = 1000 * 60 * 10;
 const MAX_RESULTS = 10000;
 
+const alcoholTypeMap: Record<string, string> = {
+  Svakvin: 'Vin',
+  Sterkvin: 'Vin',
+  Brennevin: 'Sprit',
+  Øl: 'Øl',
+};
+const getAlcoholType = (type: string) => alcoholTypeMap[type] || 'Annet';
+
 const alkisKalkis = (price: number, volume: number, alcoholContent: number) =>
   price / ((volume * alcoholContent) / 100);
 const sortByAlkPerNOK = (alkoA: Alko, alkoB: Alko) =>
@@ -46,6 +54,21 @@ const fetchAlko = (apiKey: string) =>
       return alkohyler;
     });
 
+const filterAlcohol = (
+  alkohyler: Alko[],
+  searchQuery: string,
+  alcoholTypes: string[],
+  limit: number,
+  offset: number
+) =>
+  alkohyler
+    .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
+    .filter((alko) => {
+      if (alcoholTypes.length === 0) return true;
+      return alcoholTypes.includes(getAlcoholType(alko.type));
+    })
+    .slice(offset, limit);
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!VIN_API_KEY) {
     res.status(401);
@@ -55,15 +78,17 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const offset = req.query.offset ? Number(req.query.offset) : 0;
     const limit = (req.query.limit ? Number(req.query.limit) : 25) + offset;
     const searchQuery = req.query.searchQuery as string;
+    const alcoholTypes =
+      typeof req.query.alcoholTypes === 'string'
+        ? [req.query.alcoholTypes]
+        : req.query.alcoholTypes || [];
 
     if (!cachedAlkohyler.length) {
       fetchAlko(VIN_API_KEY).then((alkohyler) =>
         res
           .status(200)
           .json(
-            alkohyler
-              .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
-              .slice(offset, limit)
+            filterAlcohol(alkohyler, searchQuery, alcoholTypes, limit, offset)
           )
       );
       return;
@@ -76,9 +101,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(200)
       .json(
-        cachedAlkohyler
-          .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
-          .slice(offset, limit)
+        filterAlcohol(cachedAlkohyler, searchQuery, alcoholTypes, limit, offset)
       );
   }
 }
