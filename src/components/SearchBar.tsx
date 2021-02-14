@@ -9,7 +9,7 @@ interface SearchBarProps extends BoxProps {
 const SearchBar = ({ query, onSearch, ...rest }: SearchBarProps) => {
   return <Box bg="white" borderWidth="1px" borderRadius="lg" p="3" boxShadow="md" {...rest}>
       <InputGroup>
-      <Input borderRadius={25} bg="#F4F4F4" placeholder="Søk etter produkt" value={query} onChange={(e) => onSearch(e.target.value)}/>
+      <Input borderRadius={25} bg="lightGrey" borderColor="darkGrey" placeholder="Søk etter produkt" value={query} onChange={(e) => onSearch(e.target.value)}/>
       <InputRightElement children={<Search2Icon />} />
     </InputGroup>
   </Box>

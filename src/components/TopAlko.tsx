@@ -10,7 +10,7 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => {
     return <Box padding={5} {...rest}>
         <Stack alignItems={'center'} spacing={0}>
             <Box textAlign="center">
-                <Heading size="xl">{alko.alkPerNOK.toFixed(0)} kr/l</Heading>
+                <Heading fontSize="2xl">{alko.alkPerNOK.toFixed(0)} kr/l</Heading>
                 <Text fontSize="sm">{alko.name}</Text>
                 <Text fontSize="sm">{alko.type}</Text>
                 <Stack fontSize="xl" direction="row" justifyContent="space-between">

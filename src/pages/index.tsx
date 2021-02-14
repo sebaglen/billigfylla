@@ -15,6 +15,7 @@ import TopAlko from '../components/TopAlko'
 import StickyHeader from '../components/StickyHeader'
 import Content from '../components/Content'
 import SearchBar from '../components/SearchBar'
+import ListHeader from '../components/ListHeader'
 
 
 const Index = () => {
@@ -30,45 +31,48 @@ const Index = () => {
       .then(() => setIsLoading(false))
   }, [])
 
-  if(isLoading) {
+  if (isLoading) {
     return (
-    <Box 
-      width="100vw" 
-      height="100vh" 
-      display="flex" 
-      justifyContent="space-around" 
-      alignItems="center"
-    >
-      <Spinner />
-    </Box>
+      <Box
+        width="100vw"
+        height="100vh"
+        display="flex"
+        justifyContent="space-around"
+        alignItems="center"
+      >
+        <Spinner />
+      </Box>
     )
   }
 
   return (
     <Container height="100vh">
       <StickyHeader>
-        <Heading size="md">
+        <Heading fontSize="lg">
           Billigfylla
         </Heading>
       </StickyHeader>
       <Main mt="4.5rem" alignItems="center">
-        <Stack bg="brand" width="full" alignItems="center" pb="20" mb="-20">
+        <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
           <Content pt="4.5rem" >
-            <TopAlko alko={alkohyler[0]}/>
+            <TopAlko alko={alkohyler[0]} />
             <SearchBar query={searchQuery} onSearch={setSearchQuery} />
           </Content>
         </Stack>
         <Content>
-          <List spacing={3} my={0} display="relative" height="100%" pb="10">
-            {alkohyler
-              .slice(1)
-              .filter(alko => alko.name.match(new RegExp(searchQuery, 'gi')))
-              .map((alko => (
-                <ListItem key={alko.productId}>
-                  <AlkoCard alko={alko} />
-                </ListItem>
-              )))}
-          </List>
+          <Box borderRadius="lg" borderWidth="1px" p="3" boxShadow="md" bg="white">
+            <ListHeader tokens={["token 1", "token 2"]}></ListHeader>
+            <List spacing={0} my={0} display="relative" height="100%" pb="10">
+              {alkohyler
+                .slice(1)
+                .filter(alko => alko.name.match(new RegExp(searchQuery, 'gi')))
+                .map((alko => (
+                  <ListItem key={alko.productId}>
+                    <AlkoCard alko={alko} />
+                  </ListItem>
+                )))}
+            </List>
+          </Box>
         </Content>
       </Main>
     </Container>
