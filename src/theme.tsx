@@ -1,14 +1,14 @@
-import { extendTheme } from '@chakra-ui/react'
-import { createBreakpoints } from '@chakra-ui/theme-tools'
+import { extendTheme } from '@chakra-ui/react';
+import { createBreakpoints } from '@chakra-ui/theme-tools';
 
-const fonts = { mono: `'Menlo', monospace` }
+const fonts = { mono: `'Menlo', monospace` };
 
 const breakpoints = createBreakpoints({
   sm: '40em',
   md: '52em',
   lg: '64em',
   xl: '80em',
-})
+});
 
 const theme = extendTheme({
   colors: {
@@ -19,34 +19,34 @@ const theme = extendTheme({
   },
   fonts,
   fontSizes: {
-    xs: "9px",
-    sm: "12px",
-    md: "14px",
-    lg: "16px",
-    xl: "24px",
-    "2xl": "36px"
+    xs: '9px',
+    sm: '12px',
+    md: '14px',
+    lg: '16px',
+    xl: '24px',
+    '2xl': '36px',
   },
   breakpoints,
   components: {
     Button: {
       variants: {
         toggled: {
-          backgroundColor: "brand",
-          border: "1px solid",
-          borderColor: "brand",
+          backgroundColor: 'brand',
+          border: '1px solid',
+          borderColor: 'brand',
         },
         notToggled: {
-          border: "1px solid", 
-          borderColor: "darkGrey",
+          border: '1px solid',
+          borderColor: 'darkGrey',
         },
       },
       baseStyle: {
         _focus: {
-          boxShadow: "none",
-        }
-      }
-    }
-  }
-})
+          boxShadow: 'none',
+        },
+      },
+    },
+  },
+});
 
-export default theme
+export default theme;
