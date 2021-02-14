@@ -18,6 +18,7 @@ import { Main } from '../components/Main';
 import SearchBar from '../components/SearchBar';
 import StickyHeader from '../components/StickyHeader';
 import TopAlko from '../components/TopAlko';
+import useDebounce from '../hooks/useDebounce';
 
 const fetchAlcohol = (
   searchQuery: string,
@@ -37,6 +38,7 @@ const Index = () => {
     'Øl',
     'Sprit',
   ]);
+  const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 250);
 
   useEffect(() => {
     setIsLoading(true);
@@ -48,7 +50,7 @@ const Index = () => {
         setAlkohyler(res.slice(1));
       })
       .finally(() => setIsLoading(false));
-  }, [searchQuery, alcoholTypes]);
+  }, [searchQuery, debouncedAlcoholTypes]);
 
   if (!topAlko) {
     return (
