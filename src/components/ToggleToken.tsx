@@ -1,21 +1,26 @@
-import { useState } from 'react';
 import { ButtonProps, Button } from '@chakra-ui/react';
 
 interface ToggleTokenProps extends ButtonProps {
   title: string;
+  isToggled: boolean;
+  onToggle: (isToggled: boolean) => void;
 }
 
-const toggleToken = ({ title, ...rest }: ToggleTokenProps) => {
-  const [showMe, setShowMe] = useState(false);
+const toggleToken = ({
+  title,
+  isToggled,
+  onToggle,
+  ...rest
+}: ToggleTokenProps) => {
   function toggle() {
-    setShowMe(!showMe);
+    onToggle(!isToggled);
   }
   return (
     <Button
       onClick={toggle}
       size="sm"
       borderRadius="25px"
-      variant={showMe ? 'toggled' : 'notToggled'}
+      variant={isToggled ? 'toggled' : 'notToggled'}
       {...rest}
     >
       {title}

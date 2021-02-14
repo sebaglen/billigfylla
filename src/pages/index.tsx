@@ -8,8 +8,8 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
 import { stringify } from 'query-string';
+import React, { useEffect, useState } from 'react';
 import AlkoCard from '../components/AlkoCard';
 import { Container } from '../components/Container';
 import Content from '../components/Content';
@@ -19,9 +19,12 @@ import SearchBar from '../components/SearchBar';
 import StickyHeader from '../components/StickyHeader';
 import TopAlko from '../components/TopAlko';
 
-const fetchAlcohol = (searchQuery: string): Promise<Alko[]> =>
+const fetchAlcohol = (
+  searchQuery: string,
+  alcoholTypes: string[]
+): Promise<Alko[]> =>
   fetch(
-    `/api/get-products?${stringify({ searchQuery, limit: 50 })}`
+    `/api/get-products?${stringify({ searchQuery, alcoholTypes, limit: 50 })}`
   ).then((res) => res.json());
 
 const Index = () => {
@@ -29,10 +32,15 @@ const Index = () => {
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [alcoholTypes, setAlcoholTypes] = useState<string[]>([
+    'Vin',
+    'Øl',
+    'Sprit',
+  ]);
 
   useEffect(() => {
     setIsLoading(true);
-    fetchAlcohol(searchQuery)
+    fetchAlcohol(searchQuery, alcoholTypes)
       .then((res) => {
         if (res.length) {
           setTopAlko(res[0]);
@@ -40,7 +48,7 @@ const Index = () => {
         setAlkohyler(res.slice(1));
       })
       .finally(() => setIsLoading(false));
-  }, [searchQuery]);
+  }, [searchQuery, alcoholTypes]);
 
   if (!topAlko) {
     return (
@@ -76,7 +84,11 @@ const Index = () => {
             boxShadow="md"
             bg="white"
           >
-            <ListHeader tokens={['token 1', 'token 2']} />
+            <ListHeader
+              tokens={['Vin', 'Øl', 'Sprit', 'Annet']}
+              selectedTokens={alcoholTypes}
+              setSelectedTokens={setAlcoholTypes}
+            />
             <List spacing={0} my={0} display="relative" height="100%" pb="10">
               {alkohyler.map((alko) =>
                 isLoading ? (
