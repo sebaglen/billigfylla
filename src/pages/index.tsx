@@ -1,29 +1,48 @@
-import { List, ListItem, Box, Spinner, Heading, Stack } from '@chakra-ui/react';
-
+import {
+  Box,
+  Heading,
+  List,
+  ListItem,
+  SkeletonCircle,
+  SkeletonText,
+  Spinner,
+  Stack,
+} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { Container } from '../components/Container';
-import { Main } from '../components/Main';
+import { stringify } from 'query-string';
 import AlkoCard from '../components/AlkoCard';
-import TopAlko from '../components/TopAlko';
-import StickyHeader from '../components/StickyHeader';
+import { Container } from '../components/Container';
 import Content from '../components/Content';
-import SearchBar from '../components/SearchBar';
 import ListHeader from '../components/ListHeader';
+import { Main } from '../components/Main';
+import SearchBar from '../components/SearchBar';
+import StickyHeader from '../components/StickyHeader';
+import TopAlko from '../components/TopAlko';
+
+const fetchAlcohol = (searchQuery: string): Promise<Alko[]> =>
+  fetch(
+    `/api/get-products?${stringify({ searchQuery, limit: 50 })}`
+  ).then((res) => res.json());
 
 const Index = () => {
+  const [topAlko, setTopAlko] = useState<Alko>();
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('/api/get-products?limit=50')
-      .then((res) => res.json())
-      .then((res) => setAlkohyler(res))
-      .then(() => setIsLoading(false));
-  }, []);
+    fetchAlcohol(searchQuery)
+      .then((res) => {
+        if (res.length) {
+          setTopAlko(res[0]);
+        }
+        setAlkohyler(res.slice(1));
+      })
+      .finally(() => setIsLoading(false));
+  }, [searchQuery]);
 
-  if (isLoading) {
+  if (!topAlko) {
     return (
       <Box
         width="100vw"
@@ -45,7 +64,7 @@ const Index = () => {
       <Main mt="4.5rem" alignItems="center">
         <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
           <Content pt="4.5rem">
-            <TopAlko alko={alkohyler[0]} />
+            <TopAlko alko={topAlko} />
             <SearchBar query={searchQuery} onSearch={setSearchQuery} />
           </Content>
         </Stack>
@@ -59,16 +78,23 @@ const Index = () => {
           >
             <ListHeader tokens={['token 1', 'token 2']} />
             <List spacing={0} my={0} display="relative" height="100%" pb="10">
-              {alkohyler
-                .slice(1)
-                .filter((alko) =>
-                  alko.name.match(new RegExp(searchQuery, 'gi'))
-                )
-                .map((alko) => (
+              {alkohyler.map((alko) =>
+                isLoading ? (
+                  <Stack
+                    direction="row"
+                    justifyContent="space-evenly"
+                    alignItems="center"
+                    p="3"
+                  >
+                    <SkeletonCircle size="10" />
+                    <SkeletonText noOfLines={4} spacing="4" width="85%" />
+                  </Stack>
+                ) : (
                   <ListItem key={alko.productId}>
                     <AlkoCard alko={alko} />
                   </ListItem>
-                ))}
+                )
+              )}
             </List>
           </Box>
         </Content>

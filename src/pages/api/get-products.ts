@@ -54,10 +54,17 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const offset = req.query.offset ? Number(req.query.offset) : 0;
     const limit = (req.query.limit ? Number(req.query.limit) : 25) + offset;
+    const searchQuery = req.query.searchQuery as string;
 
     if (!cachedAlkohyler.length) {
       fetchAlko(VIN_API_KEY).then((alkohyler) =>
-        res.status(200).json(alkohyler.slice(offset, limit))
+        res
+          .status(200)
+          .json(
+            alkohyler
+              .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
+              .slice(offset, limit)
+          )
       );
       return;
     }
@@ -66,6 +73,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       fetchAlko(VIN_API_KEY);
     }
 
-    res.status(200).json(cachedAlkohyler.slice(offset, limit));
+    res
+      .status(200)
+      .json(
+        cachedAlkohyler
+          .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
+          .slice(offset, limit)
+      );
   }
 }
