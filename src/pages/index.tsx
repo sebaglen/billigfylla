@@ -38,6 +38,7 @@ const Index = () => {
     'Øl',
     'Sprit',
   ]);
+  const debouncedSearchQuery = useDebounce<string>(searchQuery, 250);
   const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 250);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const Index = () => {
         setAlkohyler(res.slice(1));
       })
       .finally(() => setIsLoading(false));
-  }, [searchQuery, debouncedAlcoholTypes]);
+  }, [debouncedSearchQuery, debouncedAlcoholTypes]);
 
   if (!topAlko) {
     return (
