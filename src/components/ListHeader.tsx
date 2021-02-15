@@ -24,7 +24,7 @@ const ListHeader = ({
   return (
     <Box {...rest}>
       <Text fontSize="xs">Alternativer</Text>
-      <List alignItems="center" p="10px 0" spacing={1}>
+      <List alignItems="center" pt="10px" spacing={1}>
         <Stack direction="row">
           {tokens.map((token) => (
             <ListItem key={token}>

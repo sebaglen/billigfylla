@@ -1,22 +1,36 @@
-import { Text, Box, Heading, Spinner, Button, Stack } from '@chakra-ui/react';
+import {
+  Text,
+  Box,
+  Heading,
+  Spinner,
+  Button,
+  Stack,
+  BoxProps,
+} from '@chakra-ui/react';
 import Image from 'next/image';
 import React from 'react';
 
-interface AlkoCardProps {
+interface AlkoCardProps extends BoxProps {
   alko?: Alko;
 }
 
-const AlkoCard = ({ alko }: AlkoCardProps) => {
+const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => {
   if (!alko) {
     return (
-      <Box borderWidth="1px" borderRadius="lg" p="6" textAlign="center">
+      <Box
+        borderWidth="1px"
+        borderRadius="lg"
+        p="6"
+        textAlign="center"
+        {...rest}
+      >
         <Spinner />
       </Box>
     );
   }
 
   return (
-    <Box borderTop="1px" borderColor="darkGrey" p="3">
+    <Box p="3" {...rest}>
       <Stack direction="row" alignItems="center">
         <Box padding="0 13px 0 13px">
           <Image
@@ -35,7 +49,17 @@ const AlkoCard = ({ alko }: AlkoCardProps) => {
             <Heading fontSize="lg">{alko.alkPerNOK.toFixed(0)} kr/l</Heading>
             <Text fontSize="lg">{alko.price.toFixed(0)} kr</Text>
           </Stack>
-          <Text fontSize="sm">{alko.name}</Text>
+          <Text
+            fontSize="sm"
+            fontWeight="light"
+            pr="70px"
+            overflow="hidden"
+            maxHeight="36px"
+            white-space="nowrap"
+            textOverflow="ellipsis"
+          >
+            {alko.name}
+          </Text>
           <Stack
             direction="row"
             justifyContent="space-between"

@@ -25,7 +25,7 @@ const Header = (props: BoxProps) => {
       background="brand"
       {...props}
     >
-      <chakra.div height="4.5rem" mx="auto" maxW="1200px">
+      <chakra.div height="2.5rem" mx="auto" maxW="1200px">
         <Stack alignItems="center" justifyContent="space-around" height="100%">
           {children}
         </Stack>

@@ -72,41 +72,44 @@ const Index = () => {
       <StickyHeader>
         <Heading fontSize="lg">Billigfylla</Heading>
       </StickyHeader>
-      <Main mt="4.5rem" alignItems="center" pb="5">
+      <Main mt="2.5rem" alignItems="center" pb="5">
         <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
-          <Content pt="4.5rem">
+          <Content pt="1rem">
             <TopAlko alko={topAlko} />
             <SearchBar query={searchQuery} onSearch={setSearchQuery} />
           </Content>
         </Stack>
         <Content>
-          <Box
-            borderRadius="lg"
-            borderWidth="1px"
-            p="3"
-            boxShadow="md"
-            bg="white"
-          >
+          <Box borderRadius="lg" borderWidth="1px" boxShadow="md" bg="white">
             <ListHeader
+              p={3}
               tokens={['Vin', 'Øl', 'Sprit', 'Annet']}
               selectedTokens={alcoholTypes}
               setSelectedTokens={setAlcoholTypes}
+              borderBottom="1px solid"
+              borderColor="darkGrey"
             />
-            <List spacing={0} my={0} display="relative" height="100%">
-              {alkohyler.map((alko) =>
+            <List spacing={0} my={0} display="relative" height="100%" px={3}>
+              {alkohyler.map((alko, index) =>
                 isLoading ? (
                   <Stack
                     direction="row"
                     justifyContent="space-evenly"
                     alignItems="center"
                     p="3"
+                    borderTop={index === 0 ? 'none' : '1px'}
+                    borderColor="darkGrey"
                   >
                     <SkeletonCircle size="10" />
                     <SkeletonText noOfLines={4} spacing="4" width="85%" />
                   </Stack>
                 ) : (
                   <ListItem key={alko.productId}>
-                    <AlkoCard alko={alko} />
+                    <AlkoCard
+                      alko={alko}
+                      borderTop={index === 0 ? 'none' : '1px'}
+                      borderColor="darkGrey"
+                    />
                   </ListItem>
                 )
               )}

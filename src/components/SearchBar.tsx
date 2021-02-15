@@ -17,7 +17,7 @@ const SearchBar = ({ query, onSearch, ...rest }: SearchBarProps) => (
     bg="white"
     borderWidth="1px"
     borderRadius="lg"
-    p="3"
+    p="10px"
     boxShadow="md"
     {...rest}
   >
