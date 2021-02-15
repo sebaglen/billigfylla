@@ -26,6 +26,11 @@ const theme = extendTheme({
     xl: '24px',
     '2xl': '36px',
   },
+  fontWeights: {
+    thin: 300,
+    regular: 400,
+    bold: 600,
+  },
   breakpoints,
   components: {
     Button: {
