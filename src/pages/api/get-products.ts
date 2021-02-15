@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const VIN_API_KEY = process.env.VINMONOPOLET_API_KEY;
-const FETCH_INTERVAL = 1000 * 60 * 10;
-const MAX_RESULTS = 10000;
+const FETCH_INTERVAL = 1000 * 60 * 60;
+const MAX_RESULTS = 30000;
 
 const alcoholTypeMap: Record<string, string> = {
   Svakvin: 'Vin',
@@ -82,6 +82,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       typeof req.query.alcoholTypes === 'string'
         ? [req.query.alcoholTypes]
         : req.query.alcoholTypes || [];
+
+    console.log(cachedAlkohyler.length);
 
     if (!cachedAlkohyler.length) {
       fetchAlko(VIN_API_KEY).then((alkohyler) =>
