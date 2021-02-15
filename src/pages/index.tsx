@@ -38,8 +38,8 @@ const Index = () => {
     'Øl',
     'Sprit',
   ]);
-  const debouncedSearchQuery = useDebounce<string>(searchQuery, 250);
-  const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 250);
+  const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
+  const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 400);
 
   useEffect(() => {
     setIsLoading(true);
