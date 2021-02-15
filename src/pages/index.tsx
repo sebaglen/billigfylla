@@ -72,7 +72,7 @@ const Index = () => {
       <StickyHeader>
         <Heading fontSize="lg">Billigfylla</Heading>
       </StickyHeader>
-      <Main mt="4.5rem" alignItems="center">
+      <Main mt="4.5rem" alignItems="center" pb="5">
         <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
           <Content pt="4.5rem">
             <TopAlko alko={topAlko} />
@@ -92,7 +92,7 @@ const Index = () => {
               selectedTokens={alcoholTypes}
               setSelectedTokens={setAlcoholTypes}
             />
-            <List spacing={0} my={0} display="relative" height="100%" pb="10">
+            <List spacing={0} my={0} display="relative" height="100%">
               {alkohyler.map((alko) =>
                 isLoading ? (
                   <Stack
