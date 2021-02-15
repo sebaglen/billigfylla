@@ -10,11 +10,20 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
   <Box padding={5} {...rest}>
     <Stack alignItems="center" spacing={0}>
       <Box textAlign="center">
-        <Heading fontSize="2xl">{alko.alkPerNOK.toFixed(0)} kr/l</Heading>
-        <Text fontSize="sm">{alko.name}</Text>
-        <Text fontSize="sm">{alko.type}</Text>
-        <Stack fontSize="xl" direction="row" justifyContent="space-between">
-          <Text>{alko.price.toFixed(0)},-</Text>
+        <Stack direction="row" alignItems="baseline" justifyContent="center">
+          <Heading fontSize="2xl">{alko.alkPerNOK.toFixed(0)}</Heading>
+          <Heading fontSize="xl">kr/l</Heading>
+        </Stack>
+        <Text fontSize="sm" fontWeight="thin">
+          {alko.name}
+        </Text>
+        <Stack
+          fontSize="md"
+          direction="row"
+          justifyContent="space-between"
+          fontWeight="regular"
+        >
+          <Text>{alko.price.toFixed(0)}kr</Text>
           <Text>{alko.volume}L</Text>
           <Text>{alko.alcoholContent}%</Text>
         </Stack>
