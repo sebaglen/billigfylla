@@ -38,6 +38,7 @@ const Index = () => {
     'Øl',
     'Sprit',
   ]);
+  const [location, setLocation] = useState<GeolocationPosition>();
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
   const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 400);
 
@@ -52,6 +53,12 @@ const Index = () => {
       })
       .finally(() => setIsLoading(false));
   }, [debouncedSearchQuery, debouncedAlcoholTypes]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(setLocation);
+    }
+  }, []);
 
   if (!topAlko) {
     return (
