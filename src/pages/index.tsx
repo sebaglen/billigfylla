@@ -14,18 +14,19 @@ import AlkoCard from '../components/AlkoCard';
 import { Container } from '../components/Container';
 import Content from '../components/Content';
 import ListHeader from '../components/ListHeader';
-import { Main } from '../components/Main';
 import SearchBar from '../components/SearchBar';
 import StickyHeader from '../components/StickyHeader';
 import TopAlko from '../components/TopAlko';
 import useDebounce from '../hooks/useDebounce';
+import { useViewportScroll } from 'framer-motion';
 
 const fetchAlcohol = (
   searchQuery: string,
-  alcoholTypes: string[]
+  alcoholTypes: string[],
+  results: Number
 ): Promise<Alko[]> =>
   fetch(
-    `/api/get-products?${stringify({ searchQuery, alcoholTypes, limit: 50 })}`
+    `/api/get-products?${stringify({ searchQuery, alcoholTypes, limit: results })}`
   ).then((res) => res.json());
 
 const Index = () => {
@@ -33,6 +34,13 @@ const Index = () => {
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [results, setResults] = useState<number>(50);
+  const [yScrolled, setYScrolled] = useState<number>(0);
+
+  const ref = React.useRef<HTMLDivElement>(null);
+  const { height = 0 } = ref.current?.getBoundingClientRect() ?? {};
+  const { scrollY } = useViewportScroll();
+
   const [alcoholTypes, setAlcoholTypes] = useState<string[]>([
     'Vin',
     'Øl',
@@ -44,7 +52,7 @@ const Index = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchAlcohol(searchQuery, alcoholTypes)
+    fetchAlcohol(searchQuery, alcoholTypes, results)
       .then((res) => {
         if (res.length) {
           setTopAlko(res[0]);
@@ -52,7 +60,19 @@ const Index = () => {
         setAlkohyler(res.slice(1));
       })
       .finally(() => setIsLoading(false));
-  }, [debouncedSearchQuery, debouncedAlcoholTypes]);
+  }, [debouncedSearchQuery, debouncedAlcoholTypes, results]);
+
+  useEffect(() => scrollY.onChange(() => setYScrolled(scrollY.get())), [scrollY]);
+
+  useEffect(() => {
+    if (height > 0 && isLoading === false) {
+      const headerHeight = 40;
+      if (headerHeight + height <= yScrolled + Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)) {
+        setResults(results+50);
+      }
+    }
+
+  }, [yScrolled, height]);
 
   /*useEffect(() => {
     if (navigator.geolocation) {
@@ -79,7 +99,7 @@ const Index = () => {
       <StickyHeader>
         <Heading fontSize="lg">Billigfylla</Heading>
       </StickyHeader>
-      <Main mt="2.5rem" alignItems="center" pb="5">
+      <Stack spacing="1.5rem" width="100%" mt="2.5rem" alignItems="center" pb="5" ref={ref}>
         <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
           <Content pt="1rem">
             <TopAlko alko={topAlko} />
@@ -96,7 +116,7 @@ const Index = () => {
               borderBottom="1px solid"
               borderColor="darkGrey"
             />
-            <List spacing={0} my={0} display="relative" height="100%" px={3}>
+            <List spacing={0} my={0} display="relative" height="100%" px={3} id="app">
               {alkohyler.map((alko, index) =>
                 isLoading ? (
                   <Stack
@@ -111,19 +131,19 @@ const Index = () => {
                     <SkeletonText noOfLines={4} spacing="4" width="85%" />
                   </Stack>
                 ) : (
-                  <ListItem key={alko.productId}>
-                    <AlkoCard
-                      alko={alko}
-                      borderTop={index === 0 ? 'none' : '1px'}
-                      borderColor="darkGrey"
-                    />
-                  </ListItem>
-                )
+                    <ListItem key={alko.productId}>
+                      <AlkoCard
+                        alko={alko}
+                        borderTop={index === 0 ? 'none' : '1px'}
+                        borderColor="darkGrey"
+                      />
+                    </ListItem>
+                  )
               )}
             </List>
           </Box>
         </Content>
-      </Main>
+      </Stack>
     </Container>
   );
 };
