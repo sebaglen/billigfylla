@@ -99,7 +99,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   if (req.method === 'GET') {
     const offset = req.query.offset ? Number(req.query.offset) : 0;
-    const limit = (req.query.limit ? Number(req.query.limit) : 25) + offset;
+    const limit = (req.query.limit ? Number(req.query.limit) : 40) + offset;
     const searchQuery = req.query.searchQuery as string;
     const alcoholTypes =
       typeof req.query.alcoholTypes === 'string'

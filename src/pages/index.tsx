@@ -24,13 +24,14 @@ const fetchAlcohol = (
   searchQuery: string,
   alcoholTypes: string[],
   // eslint-disable-next-line @typescript-eslint/ban-types
-  results: Number
+  offset: number
 ): Promise<Alko[]> =>
   fetch(
     `/api/get-products?${stringify({
       searchQuery,
       alcoholTypes,
-      limit: results,
+      limit: 40,
+      offset,
     })}`
   ).then((res) => res.json());
 
@@ -39,7 +40,7 @@ const Index = () => {
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [results, setResults] = useState<number>(50);
+  const [offset, setOffset] = useState<number>(0);
   const [yScrolled, setYScrolled] = useState<number>(0);
 
   const ref = React.useRef<HTMLDivElement>(null);
@@ -57,15 +58,19 @@ const Index = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchAlcohol(searchQuery, alcoholTypes, results)
+    fetchAlcohol(searchQuery, alcoholTypes, offset)
       .then((res) => {
         if (res.length) {
-          setTopAlko(res[0]);
+          if (alkohyler.length === 0) {
+            setTopAlko(res[0]);
+            setAlkohyler(res.slice(1));
+          } else {
+            setAlkohyler(alkohyler.concat(res));
+          }
         }
-        setAlkohyler(res.slice(1));
       })
       .finally(() => setIsLoading(false));
-  }, [debouncedSearchQuery, debouncedAlcoholTypes, results]);
+  }, [debouncedSearchQuery, debouncedAlcoholTypes, offset]);
 
   useEffect(() => scrollY.onChange(() => setYScrolled(scrollY.get())), [
     scrollY,
@@ -83,7 +88,7 @@ const Index = () => {
             window.innerHeight || 0
           )
       ) {
-        setResults(results + 50);
+        setOffset(offset + 40);
       }
     }
   }, [yScrolled, height]);
