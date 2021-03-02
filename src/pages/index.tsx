@@ -23,10 +23,15 @@ import { useViewportScroll } from 'framer-motion';
 const fetchAlcohol = (
   searchQuery: string,
   alcoholTypes: string[],
+  // eslint-disable-next-line @typescript-eslint/ban-types
   results: Number
 ): Promise<Alko[]> =>
   fetch(
-    `/api/get-products?${stringify({ searchQuery, alcoholTypes, limit: results })}`
+    `/api/get-products?${stringify({
+      searchQuery,
+      alcoholTypes,
+      limit: results,
+    })}`
   ).then((res) => res.json());
 
 const Index = () => {
@@ -62,16 +67,25 @@ const Index = () => {
       .finally(() => setIsLoading(false));
   }, [debouncedSearchQuery, debouncedAlcoholTypes, results]);
 
-  useEffect(() => scrollY.onChange(() => setYScrolled(scrollY.get())), [scrollY]);
+  useEffect(() => scrollY.onChange(() => setYScrolled(scrollY.get())), [
+    scrollY,
+  ]);
 
   useEffect(() => {
     if (height > 0 && isLoading === false) {
       const headerHeight = 40;
-      if (headerHeight + height <= yScrolled + Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)) {
-        setResults(results+50);
+      const margin = 300; // pixel margin where we load new items
+      if (
+        headerHeight + height - margin <=
+        yScrolled +
+          Math.max(
+            document.documentElement.clientHeight || 0,
+            window.innerHeight || 0
+          )
+      ) {
+        setResults(results + 50);
       }
     }
-
   }, [yScrolled, height]);
 
   /*useEffect(() => {
@@ -99,7 +113,14 @@ const Index = () => {
       <StickyHeader>
         <Heading fontSize="lg">Billigfylla</Heading>
       </StickyHeader>
-      <Stack spacing="1.5rem" width="100%" mt="2.5rem" alignItems="center" pb="5" ref={ref}>
+      <Stack
+        spacing="1.5rem"
+        width="100%"
+        mt="2.5rem"
+        alignItems="center"
+        pb="5"
+        ref={ref}
+      >
         <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
           <Content pt="1rem">
             <TopAlko alko={topAlko} />
@@ -116,7 +137,14 @@ const Index = () => {
               borderBottom="1px solid"
               borderColor="darkGrey"
             />
-            <List spacing={0} my={0} display="relative" height="100%" px={3} id="app">
+            <List
+              spacing={0}
+              my={0}
+              display="relative"
+              height="100%"
+              px={3}
+              id="app"
+            >
               {alkohyler.map((alko, index) =>
                 isLoading ? (
                   <Stack
@@ -131,14 +159,14 @@ const Index = () => {
                     <SkeletonText noOfLines={4} spacing="4" width="85%" />
                   </Stack>
                 ) : (
-                    <ListItem key={alko.productId}>
-                      <AlkoCard
-                        alko={alko}
-                        borderTop={index === 0 ? 'none' : '1px'}
-                        borderColor="darkGrey"
-                      />
-                    </ListItem>
-                  )
+                  <ListItem key={alko.productId}>
+                    <AlkoCard
+                      alko={alko}
+                      borderTop={index === 0 ? 'none' : '1px'}
+                      borderColor="darkGrey"
+                    />
+                  </ListItem>
+                )
               )}
             </List>
           </Box>
