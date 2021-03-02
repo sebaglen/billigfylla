@@ -1,8 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 const VIN_API_KEY = process.env.VINMONOPOLET_API_KEY;
-const FETCH_INTERVAL = 1000 * 60 * 60;
+const FETCH_INTERVAL = 1000 * 60 * 5;
 const MAX_RESULTS = 30000;
+const CACHE_FILE_NAME = 'alko-cache.json';
 
 const alcoholTypeMap: Record<string, string> = {
   Svakvin: 'Vin',
@@ -19,6 +22,25 @@ const sortByAlkPerNOK = (alkoA: Alko, alkoB: Alko) =>
 
 let cachedAlkohyler: Alko[] = [];
 let lastUpdated = Date.now();
+
+const writeToCache = (alkohyler: Alko[]) => {
+  if (alkohyler.length) {
+    console.log('Writing to cache...');
+    fs.writeFile(
+      path.join(process.cwd(), CACHE_FILE_NAME),
+      JSON.stringify(alkohyler, null, 2)
+    ).catch((e) => console.error('Failed to write cache:', e));
+  }
+};
+
+const readFromCache = (): Promise<Alko[]> =>
+  fs
+    .readFile(path.join(process.cwd(), CACHE_FILE_NAME))
+    .then((rawCache) => JSON.parse(rawCache.toString()))
+    .catch((e) => {
+      console.error('Failed to read cache:', e);
+      return [];
+    });
 
 const fetchAlko = (apiKey: string) =>
   fetch(
@@ -51,6 +73,7 @@ const fetchAlko = (apiKey: string) =>
         .sort(sortByAlkPerNOK);
       lastUpdated = Date.now();
       cachedAlkohyler = alkohyler;
+      writeToCache(alkohyler);
       return alkohyler;
     });
 
@@ -83,20 +106,49 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         ? [req.query.alcoholTypes]
         : req.query.alcoholTypes || [];
 
-    console.log(cachedAlkohyler.length);
+    console.log('Alkohyler in memory:', cachedAlkohyler.length);
 
     if (!cachedAlkohyler.length) {
-      fetchAlko(VIN_API_KEY).then((alkohyler) =>
-        res
-          .status(200)
-          .json(
-            filterAlcohol(alkohyler, searchQuery, alcoholTypes, limit, offset)
-          )
-      );
+      console.log('Reading from file...');
+      readFromCache().then((cache) => {
+        console.log('Alkohyler in file:', cache.length);
+        if (cache.length) {
+          cachedAlkohyler = cache;
+          res
+            .status(200)
+            .json(
+              filterAlcohol(
+                cachedAlkohyler,
+                searchQuery,
+                alcoholTypes,
+                limit,
+                offset
+              )
+            );
+          console.log('Refecthing from API... 1');
+          fetchAlko(VIN_API_KEY);
+        } else {
+          console.log('Refecthing from API... 2');
+          fetchAlko(VIN_API_KEY).then((alkohyler) =>
+            res
+              .status(200)
+              .json(
+                filterAlcohol(
+                  alkohyler,
+                  searchQuery,
+                  alcoholTypes,
+                  limit,
+                  offset
+                )
+              )
+          );
+        }
+      });
       return;
     }
 
     if (Date.now() - lastUpdated > FETCH_INTERVAL) {
+      console.log('Refetching from API... 3');
       fetchAlko(VIN_API_KEY);
     }
 
