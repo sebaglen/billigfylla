@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React from 'react';
 
 interface AlkoCardProps extends BoxProps {
-  alko: Alko;
+  alko?: Alko;
 }
 
 export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
@@ -11,11 +11,11 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
     <Stack alignItems="center" spacing={0}>
       <Box textAlign="center">
         <Stack direction="row" alignItems="baseline" justifyContent="center">
-          <Heading fontSize="2xl">{alko.alkPerNOK.toFixed(0)}</Heading>
+          <Heading fontSize="2xl">{alko?.alkPerNOK.toFixed(0)}</Heading>
           <Heading fontSize="xl">kr/l</Heading>
         </Stack>
         <Text fontSize="sm" fontWeight="thin">
-          {alko.name}
+          {alko?.name}
         </Text>
         <Stack
           fontSize="md"
@@ -23,9 +23,9 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
           justifyContent="space-between"
           fontWeight="regular"
         >
-          <Text>{alko.price.toFixed(0)}kr</Text>
-          <Text>{alko.volume}L</Text>
-          <Text>{alko.alcoholContent}%</Text>
+          <Text>{alko?.price.toFixed(0)}kr</Text>
+          <Text>{alko?.volume}L</Text>
+          <Text>{alko?.alcoholContent}%</Text>
         </Stack>
       </Box>
       <Box
