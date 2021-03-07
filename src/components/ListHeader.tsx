@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, BoxProps, List, ListItem, Stack, Text } from '@chakra-ui/react';
+import { Box, BoxProps, List, ListItem, Wrap, Text } from '@chakra-ui/react';
 import ToggleToken from './ToggleToken';
 
 interface ListHeaderProps extends BoxProps {
@@ -23,9 +23,9 @@ const ListHeader = ({
 
   return (
     <Box {...rest}>
-      <Text fontSize="xs">Alternativer</Text>
+      <Text fontSize="xs">Filter</Text>
       <List alignItems="center" pt="10px" spacing={1}>
-        <Stack direction="row">
+        <Wrap>
           {tokens.map((token) => (
             <ListItem key={token}>
               <ToggleToken
@@ -35,7 +35,7 @@ const ListHeader = ({
               />
             </ListItem>
           ))}
-        </Stack>
+        </Wrap>
       </List>
     </Box>
   );
