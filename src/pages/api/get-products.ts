@@ -7,13 +7,73 @@ const FETCH_INTERVAL = 1000 * 60 * 5;
 const MAX_RESULTS = 30000;
 const CACHE_FILE_NAME = 'alko-cache.json';
 
-const alcoholTypeMap: Record<string, string> = {
+/* Type list:
+* Øl
+* Vin
+* Whisky
+* Annet
+* Sprit
+* Chæmpis
+* Rusbrus
+* Brennevin
+*/
+
+// For backup use if no subType is specified or recognized
+const mainTypeAlcMap: Record<string, string> = {
   Svakvin: 'Vin',
   Sterkvin: 'Vin',
   Brennevin: 'Sprit',
   Øl: 'Øl',
 };
-const getAlcoholType = (type: string) => alcoholTypeMap[type] || 'Annet';
+
+// Prioritized types
+const subTypeAlcMap: Record<string, string> = {
+  'Øl' : 'Øl',
+  'Akevitt' : 'Brennevin',
+  'Portvin' : 'Vin',
+  'Vodka' : 'Sprit',
+  'Druebrennevin' : 'Brennevin',
+  'Whisky' : 'Whisky',
+  'Likør' : 'Likør',
+  'Genever' : 'Sprit',
+  'Gin' : 'Sprit',
+  'Bitter' : 'Annet',
+  'Fruktbrennevin' : 'Brennevin',
+  'Vermut' : 'Sprit',
+  'Aromatisert vin' : 'Vin',
+  'Brennevin, annet' : 'Brennevin',
+  'Sherry' : 'Vin',
+  'Rødvin' : 'Vin',
+  'Hvitvin' : 'Vin',
+  'Perlende vin' : 'Chæmpis',
+  'Rosévin' : 'Vin',
+  'Musserende vin' : 'Chæmpis',
+  'Rom' : 'Brennevin',
+  'Sterkvin, annen' : 'Vin',
+  'Fruktvin' : 'Vin',
+  'Sider' : 'Rusbrus',
+  'Alkoholfri musserende, øvrig' : 'Annet',
+  'Sake' : 'Vin',
+  'Madeira' : '',
+  'Alkoholfri most' : 'Annet',
+  'Tonic' : 'Annet',
+  'Mjød' : 'Øl',
+  'Brennevin, nøytralt < 37,5 %' : 'Brennevin',
+  'Alkoholfri musserende vin' : 'Annet',
+  'Ingefærøl' : 'Øl',
+  'Alkoholfri hvitvin' : 'Annet',
+  'Alkoholfritt øl' : 'Annet',
+  'Alkoholfri rødvin' : 'Annet',
+  'Limonade' : 'Annet',
+  'Alkoholfri rosévin' : 'Annet',
+  'Mocktails' : 'Annet',
+  'Leskedrikk' : 'Annet',
+  'Alkoholfritt brennevin' : 'Annet',
+  'Alkoholfritt, øvrig' : 'Annet'
+};
+
+
+const getAlcoholType = (type: string, subType: string) => subTypeAlcMap[subType] || mainTypeAlcMap[type] || 'Annet';
 
 const alkisKalkis = (price: number, volume: number, alcoholContent: number) =>
   price / ((volume * alcoholContent) / 100);
@@ -58,7 +118,7 @@ const fetchAlko = (apiKey: string) =>
             const { volume } = alk.basic;
             const { alcoholContent } = alk.basic;
             const { productId } = alk.basic;
-            const type = alk.classification.mainProductTypeName;
+            const type = getAlcoholType(alk.classification.mainProductTypeName, alk.classification.subProductTypeName);
             return {
               productId,
               price,
@@ -69,8 +129,9 @@ const fetchAlko = (apiKey: string) =>
               type,
             };
           }
-        )
-        .sort(sortByAlkPerNOK);
+          )
+          .sort(sortByAlkPerNOK);
+          // console.log(data.map((alk) => alk.classification.subProductTypeName).reduce((uniqueTypes: string[], curr) => uniqueTypes.includes(curr) ? uniqueTypes : uniqueTypes.concat(curr), []).join('\n'))
       lastUpdated = Date.now();
       cachedAlkohyler = alkohyler;
       writeToCache(alkohyler);
@@ -88,7 +149,7 @@ const filterAlcohol = (
     .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
     .filter((alko) => {
       if (alcoholTypes.length === 0) return true;
-      return alcoholTypes.includes(getAlcoholType(alko.type));
+      return alcoholTypes.includes(alko.type);
     })
     .slice(offset, limit);
 

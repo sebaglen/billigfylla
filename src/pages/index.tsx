@@ -49,19 +49,23 @@ const Index = () => {
   const { height = 0 } = ref.current?.getBoundingClientRect() ?? {};
   const { scrollY } = useViewportScroll();
 
-  const [alcoholTypes, setAlcoholTypes] = useState<string[]>([
-    'Vin',
+  const [enabledAlcoholTypes, setEnabledAlcoholTypes] = useState<string[]>([
     'Øl',
+    'Vin',
+    'Rusbrus',
+    'Chæmpis',
     'Sprit',
+    'Brennevin',
+    'Whisky',
   ]);
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
-  const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 400);
+  const debouncedAlcoholTypes = useDebounce<string[]>(enabledAlcoholTypes, 400);
 
   // On search or toggle token. Should always empty previous list and reset offset.
   useEffect(() => {
     setIsLoading(true);
     setOffset(0);
-    fetchAlcohol(searchQuery, alcoholTypes, 0)
+    fetchAlcohol(searchQuery, enabledAlcoholTypes, 0)
       .then((res) => {
         if (res.length < 40) {
           setHasNoMoreResults(true);
@@ -88,7 +92,7 @@ const Index = () => {
       return;
     }
     setIsLoading(true);
-    fetchAlcohol(searchQuery, alcoholTypes, offset)
+    fetchAlcohol(searchQuery, enabledAlcoholTypes, offset)
       .then((res) => {
         if (res.length < 40) {
           setHasNoMoreResults(true);
@@ -111,10 +115,10 @@ const Index = () => {
       if (
         headerHeight + height - margin <=
         yScrolled +
-          Math.max(
-            document.documentElement.clientHeight || 0,
-            window.innerHeight || 0
-          )
+        Math.max(
+          document.documentElement.clientHeight || 0,
+          window.innerHeight || 0
+        )
       ) {
         setOffset(offset + 40);
       }
@@ -158,9 +162,18 @@ const Index = () => {
           <Box borderRadius="lg" borderWidth="1px" boxShadow="md" bg="white">
             <ListHeader
               p={3}
-              tokens={['Vin', 'Øl', 'Sprit', 'Annet']}
-              selectedTokens={alcoholTypes}
-              setSelectedTokens={setAlcoholTypes}
+              tokens={[
+                'Øl',
+                'Vin',
+                'Rusbrus',
+                'Chæmpis',
+                'Sprit',
+                'Brennevin',
+                'Whisky',
+                'Annet',
+              ]}
+              selectedTokens={enabledAlcoholTypes}
+              setSelectedTokens={setEnabledAlcoholTypes}
               borderBottom="1px solid"
               borderColor="darkGrey"
             />
@@ -186,14 +199,14 @@ const Index = () => {
                     <SkeletonText noOfLines={4} spacing="4" width="85%" />
                   </Stack>
                 ) : (
-                  <ListItem key={`${alko.productId}${alko.name}`}>
-                    <AlkoCard
-                      alko={alko}
-                      borderTop={index === 0 ? 'none' : '1px'}
-                      borderColor="darkGrey"
-                    />
-                  </ListItem>
-                )
+                    <ListItem key={`${alko.productId}${alko.name}`}>
+                      <AlkoCard
+                        alko={alko}
+                        borderTop={index === 0 ? 'none' : '1px'}
+                        borderColor="darkGrey"
+                      />
+                    </ListItem>
+                  )
               )}
             </List>
           </Box>

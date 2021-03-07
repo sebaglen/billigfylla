@@ -17,6 +17,7 @@ interface APIAlko {
   };
   classification: {
     mainProductTypeName: string;
+    subProductTypeName: string;
   };
   prices: {
     salesPrice: number;
