@@ -8,6 +8,7 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router'
 import { stringify } from 'query-string';
 import React, { useEffect, useState } from 'react';
 import AlkoCard from '../components/AlkoCard';
@@ -36,12 +37,25 @@ const fetchAlcohol = (
   ).then((res) => res.json());
 
 const Index = () => {
+  const router = useRouter()
+  const { search, token } = router.query;
+  const _search = typeof search === 'string' ? search : search?.[0] || '';
+  const _tokens = typeof token === 'string' ? [token] : token || [
+    'øl',
+    'vin',
+    'rusbrus',
+    'chæmpis',
+    'sprit',
+    'brennevin',
+    'whisky',
+  ];
+
   const [topAlko, setTopAlko] = useState<Alko>();
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasNoMoreResults, setHasNoMoreResults] = useState<boolean>(false);
   const [firstTimeLoading, setFirstTimeLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(_search);
   const [offset, setOffset] = useState<number>(0);
   const [yScrolled, setYScrolled] = useState<number>(0);
 
@@ -49,15 +63,7 @@ const Index = () => {
   const { height = 0 } = ref.current?.getBoundingClientRect() ?? {};
   const { scrollY } = useViewportScroll();
 
-  const [enabledAlcoholTypes, setEnabledAlcoholTypes] = useState<string[]>([
-    'Øl',
-    'Vin',
-    'Rusbrus',
-    'Chæmpis',
-    'Sprit',
-    'Brennevin',
-    'Whisky',
-  ]);
+  const [enabledAlcoholTypes, setEnabledAlcoholTypes] = useState<string[]>(_tokens);
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
   const debouncedAlcoholTypes = useDebounce<string[]>(enabledAlcoholTypes, 400);
 
@@ -65,6 +71,12 @@ const Index = () => {
   useEffect(() => {
     setIsLoading(true);
     setOffset(0);
+    if (!firstTimeLoading) {
+      router.push(`/?${stringify({
+        search: debouncedSearchQuery,
+        token: debouncedAlcoholTypes,
+      }, {skipEmptyString: true, skipNull: true})}`)
+    }
     fetchAlcohol(searchQuery, enabledAlcoholTypes, 0)
       .then((res) => {
         if (res.length < 40) {
@@ -163,14 +175,14 @@ const Index = () => {
             <ListHeader
               p={3}
               tokens={[
-                'Øl',
-                'Vin',
-                'Rusbrus',
-                'Chæmpis',
-                'Sprit',
-                'Brennevin',
-                'Whisky',
-                'Annet',
+                'øl',
+                'vin',
+                'rusbrus',
+                'chæmpis',
+                'sprit',
+                'brennevin',
+                'whisky',
+                'annet',
               ]}
               selectedTokens={enabledAlcoholTypes}
               setSelectedTokens={setEnabledAlcoholTypes}
