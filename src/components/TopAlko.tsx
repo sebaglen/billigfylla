@@ -37,7 +37,7 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
         <div className="sale-shape rotate" />
         <Image
           loading="eager"
-          src={`https://bilder.vinmonopolet.no/cache/300x300-0/${alko.productId}-1.jpg`}
+          src={`https://bilder.vinmonopolet.no/cache/300x300-0/${alko?.productId}-1.jpg`}
           objectFit="contain"
           width={100}
           height={150}
@@ -45,7 +45,7 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
       </Box>
       <Button
         as="a"
-        href={`http://www.vinmonopolet.no/vareutvalg/varedetaljer/sku-${alko.productId}`}
+        href={`http://www.vinmonopolet.no/vareutvalg/varedetaljer/sku-${alko?.productId}`}
       >
         Vis på Vinmonopolet
       </Button>
