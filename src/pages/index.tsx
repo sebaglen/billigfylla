@@ -39,6 +39,8 @@ const Index = () => {
   const [topAlko, setTopAlko] = useState<Alko>();
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasNoMoreResults, setHasNoMoreResults] = useState<boolean>(false);
+  const [firstTimeLoading, setFirstTimeLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [offset, setOffset] = useState<number>(0);
   const [yScrolled, setYScrolled] = useState<number>(0);
@@ -52,32 +54,58 @@ const Index = () => {
     'Øl',
     'Sprit',
   ]);
-  // const [location, setLocation] = useState<GeolocationPosition>();
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
   const debouncedAlcoholTypes = useDebounce<string[]>(alcoholTypes, 400);
 
+  // On search or toggle token. Should always empty previous list and reset offset.
   useEffect(() => {
+    setIsLoading(true);
+    setOffset(0);
+    fetchAlcohol(searchQuery, alcoholTypes, 0)
+      .then((res) => {
+        if (res.length < 40) {
+          setHasNoMoreResults(true);
+        } else {
+          setHasNoMoreResults(false);
+        }
+        if (res.length > 0) {
+          setTopAlko(res[0]);
+          setAlkohyler(res.slice(1));
+        } // no results, set list to empty 
+        else {
+          setAlkohyler([]);
+          setTopAlko(undefined);
+        }
+        setFirstTimeLoading(false);
+      })
+      .finally(() => setIsLoading(false));
+  }, [debouncedSearchQuery, debouncedAlcoholTypes]);
+
+  // On scroll. Should always concat results with existing list, and should not reset offset.
+  useEffect(() => {
+    // Dont fetch if first time loading, as this useEffect will trigger on page load.
+    if (firstTimeLoading) {
+      return;
+    }
     setIsLoading(true);
     fetchAlcohol(searchQuery, alcoholTypes, offset)
       .then((res) => {
-        if (res.length) {
-          if (alkohyler.length === 0) {
-            setTopAlko(res[0]);
-            setAlkohyler(res.slice(1));
-          } else {
-            setAlkohyler(alkohyler.concat(res));
-          }
+        if (res.length < 40) {
+          setHasNoMoreResults(true);
+        }
+        if (res.length > 0) {
+          setAlkohyler(alkohyler.concat(res));
         }
       })
       .finally(() => setIsLoading(false));
-  }, [debouncedSearchQuery, debouncedAlcoholTypes, offset]);
+  }, [offset]);
 
   useEffect(() => scrollY.onChange(() => setYScrolled(scrollY.get())), [
     scrollY,
   ]);
 
   useEffect(() => {
-    if (height > 0 && isLoading === false) {
+    if (height > 0 && isLoading === false && !hasNoMoreResults) {
       const headerHeight = 40;
       const margin = 300; // pixel margin where we load new items
       if (
@@ -93,13 +121,7 @@ const Index = () => {
     }
   }, [yScrolled, height]);
 
-  /*useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(setLocation);
-    }
-  }, []);*/
-
-  if (!topAlko) {
+  if (firstTimeLoading) {
     return (
       <Box
         width="100vw"
@@ -164,7 +186,7 @@ const Index = () => {
                     <SkeletonText noOfLines={4} spacing="4" width="85%" />
                   </Stack>
                 ) : (
-                  <ListItem key={alko.productId}>
+                  <ListItem key={`${alko.productId}${alko.name}`}>
                     <AlkoCard
                       alko={alko}
                       borderTop={index === 0 ? 'none' : '1px'}
