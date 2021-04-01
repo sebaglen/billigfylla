@@ -6,6 +6,7 @@ import {
   SkeletonCircle,
   SkeletonText,
   Spinner,
+  Text,
   Stack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router'
@@ -20,6 +21,7 @@ import StickyHeader from '../components/StickyHeader';
 import TopAlko from '../components/TopAlko';
 import useDebounce from '../hooks/useDebounce';
 import { useViewportScroll } from 'framer-motion';
+import { Image } from "@chakra-ui/react";
 
 const fetchAlcohol = (
   searchQuery: string,
@@ -67,7 +69,7 @@ const Index = () => {
       router.push(`/?${stringify({
         search: debouncedSearchQuery,
         token: debouncedAlcoholTypes,
-      }, {skipEmptyString: true, skipNull: true})}`)
+      }, { skipEmptyString: true, skipNull: true })}`)
     }
     fetchAlcohol(searchQuery, enabledAlcoholTypes, 0)
       .then((res) => {
@@ -138,7 +140,26 @@ const Index = () => {
         justifyContent="space-around"
         alignItems="center"
       >
-        <Spinner />
+        <Stack alignItems="center">
+          <Text fontSize="xl" fontWeight="">
+            Billigfylla
+            </Text>
+          <Text fontSize="lg" fontWeight="">
+            Pris per liter ren alkohol.
+            </Text>
+          <Box boxSize="xs">
+            <Image src={'../../static/skaal.gif'} />
+          </Box>
+          <Stack direction="row" paddingBottom="25vh">
+            <Text fontSize="md" fontWeight="thin">
+              Laster
+            </Text>
+            <Box>
+              <Spinner size="xs" />
+            </Box>
+          </Stack>
+        </Stack>
+
       </Box>
     );
   }
@@ -203,14 +224,14 @@ const Index = () => {
                     <SkeletonText noOfLines={4} spacing="4" width="85%" />
                   </Stack>
                 ) : (
-                    <ListItem key={`${alko.productId}${alko.name}`}>
-                      <AlkoCard
-                        alko={alko}
-                        borderTop={index === 0 ? 'none' : '1px'}
-                        borderColor="darkGrey"
-                      />
-                    </ListItem>
-                  )
+                  <ListItem key={`${alko.productId}${alko.name}`}>
+                    <AlkoCard
+                      alko={alko}
+                      borderTop={index === 0 ? 'none' : '1px'}
+                      borderColor="darkGrey"
+                    />
+                  </ListItem>
+                )
               )}
             </List>
           </Box>

@@ -77,7 +77,7 @@ const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => {
               as="a"
               href={`http://www.vinmonopolet.no/vareutvalg/varedetaljer/sku-${alko.productId}`}
             >
-              Åpne
+              Kjøp
             </Button>
           </Stack>
         </Box>
