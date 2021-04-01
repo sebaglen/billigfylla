@@ -43,12 +43,6 @@ export const AlkoCard = ({ alko, ...rest }: AlkoCardProps) => (
           height={150}
         />
       </Box>
-      <Button
-        as="a"
-        href={`http://www.vinmonopolet.no/vareutvalg/varedetaljer/sku-${alko?.productId}`}
-      >
-        Vis på Vinmonopolet
-      </Button>
     </Stack>
   </Box>
 );

@@ -40,15 +40,7 @@ const Index = () => {
   const router = useRouter()
   const { search, token } = router.query;
   const _search = typeof search === 'string' ? search : search?.[0] || '';
-  const _tokens = typeof token === 'string' ? [token] : token || [
-    'øl',
-    'vin',
-    'rusbrus',
-    'chæmpis',
-    'sprit',
-    'brennevin',
-    'whisky',
-  ];
+  const _tokens = typeof token === 'string' ? [token] : token || ["øl", "vin", "sprit"];
 
   const [topAlko, setTopAlko] = useState<Alko>();
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
@@ -86,7 +78,7 @@ const Index = () => {
         }
         if (res.length > 0) {
           setTopAlko(res[0]);
-          setAlkohyler(res.slice(1));
+          setAlkohyler(res);
         } // no results, set list to empty 
         else {
           setAlkohyler([]);
@@ -177,11 +169,11 @@ const Index = () => {
               tokens={[
                 'øl',
                 'vin',
-                'rusbrus',
-                'chæmpis',
                 'sprit',
                 'brennevin',
                 'whisky',
+                'chæmpis',
+                'rusbrus',
                 'annet',
               ]}
               selectedTokens={enabledAlcoholTypes}
