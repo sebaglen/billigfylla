@@ -42,7 +42,7 @@ const Index = () => {
   const router = useRouter()
   const { search, token } = router.query;
   const _search = typeof search === 'string' ? search : search?.[0] || '';
-  const _tokens = typeof token === 'string' ? [token] : token || ["øl", "vin", "sprit"];
+  const _tokens = typeof token === 'string' ? [token] : token || [];
 
   const [topAlko, setTopAlko] = useState<Alko>();
   const [alkohyler, setAlkohyler] = useState<Alko[]>([]);
