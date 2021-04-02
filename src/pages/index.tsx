@@ -141,10 +141,10 @@ const Index = () => {
         alignItems="center"
       >
         <Stack alignItems="center">
-          <Text fontSize="xl" fontWeight="">
+          <Text fontSize="xl">
             Billigfylla
             </Text>
-          <Text fontSize="lg" fontWeight="">
+          <Text fontSize="lg">
             Pris per liter ren alkohol.
             </Text>
           <Box boxSize="xs">
@@ -179,7 +179,20 @@ const Index = () => {
       >
         <Stack bg="brand" width="full" alignItems="center" pb="45px" mb="-54px">
           <Content pt="1rem">
-            <TopAlko alko={topAlko} />
+            {topAlko ?
+              <TopAlko height="390px" alko={topAlko} />
+              :
+              <Box textAlign="center" height="390px">
+                <Box paddingTop="150px">
+                  <Text fontSize="xl">
+                    Oops
+                  </Text>
+                  <Text fontSize="lg">
+                    {`Finner ingen resultater`}
+                  </Text>
+                </Box>
+              </Box>
+            }
             <SearchBar query={searchQuery} onSearch={setSearchQuery} />
           </Content>
         </Stack>
