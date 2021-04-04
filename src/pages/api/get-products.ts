@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 const VIN_API_KEY = process.env.VINMONOPOLET_API_KEY;
-const FETCH_INTERVAL = 1000 * 60 * 5;
+const FETCH_INTERVAL = 1000 * 60 * 30;
 const MAX_RESULTS = 30000;
 const CACHE_FILE_NAME = 'alko-cache.json';
 
