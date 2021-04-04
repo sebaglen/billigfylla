@@ -27,7 +27,8 @@ const fetchAlcohol = (
   searchQuery: string,
   alcoholTypes: string[],
   // eslint-disable-next-line @typescript-eslint/ban-types
-  offset: number
+  offset: number,
+  maxPrice: number
 ): Promise<Alko[]> =>
   fetch(
     `/api/get-products?${stringify({
@@ -35,6 +36,7 @@ const fetchAlcohol = (
       alcoholTypes,
       limit: 40,
       offset,
+      maxPrice
     })}`
   ).then((res) => res.json());
 
@@ -58,6 +60,7 @@ const Index = () => {
   const { scrollY } = useViewportScroll();
 
   const [enabledAlcoholTypes, setEnabledAlcoholTypes] = useState<string[]>(_tokens);
+  const [maxPrice, setMaxPrice] = useState<number>(300);
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
   const debouncedAlcoholTypes = useDebounce<string[]>(enabledAlcoholTypes, 400);
 
@@ -69,9 +72,10 @@ const Index = () => {
       router.push(`/?${stringify({
         search: debouncedSearchQuery,
         token: debouncedAlcoholTypes,
+        maxPrice: maxPrice,
       }, { skipEmptyString: true, skipNull: true })}`)
     }
-    fetchAlcohol(searchQuery, enabledAlcoholTypes, 0)
+    fetchAlcohol(searchQuery, enabledAlcoholTypes, 0, maxPrice)
       .then((res) => {
         if (res.length < 40) {
           setHasNoMoreResults(true);
@@ -89,7 +93,7 @@ const Index = () => {
         setFirstTimeLoading(false);
       })
       .finally(() => setIsLoading(false));
-  }, [debouncedSearchQuery, debouncedAlcoholTypes]);
+  }, [debouncedSearchQuery, debouncedAlcoholTypes, maxPrice]);
 
   // On scroll. Should always concat results with existing list, and should not reset offset.
   useEffect(() => {
@@ -98,7 +102,7 @@ const Index = () => {
       return;
     }
     setIsLoading(true);
-    fetchAlcohol(searchQuery, enabledAlcoholTypes, offset)
+    fetchAlcohol(searchQuery, enabledAlcoholTypes, offset, maxPrice)
       .then((res) => {
         if (res.length < 40) {
           setHasNoMoreResults(true);
@@ -212,6 +216,7 @@ const Index = () => {
               ]}
               selectedTokens={enabledAlcoholTypes}
               setSelectedTokens={setEnabledAlcoholTypes}
+              setSelectedSlider={setMaxPrice}
               borderBottom="1px solid"
               borderColor="darkGrey"
             />

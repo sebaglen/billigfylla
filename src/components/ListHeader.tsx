@@ -18,22 +18,27 @@ interface ListHeaderProps extends BoxProps {
   tokens: string[];
   selectedTokens: string[];
   setSelectedTokens: (selectedTokens: string[]) => void;
+  setSelectedSlider: (selectedSlider: number) => void;
 }
 const ListHeader = ({
   tokens,
   selectedTokens,
   setSelectedTokens,
+  setSelectedSlider,
   ...rest
 }: ListHeaderProps) => {
-  const handleChange = (token: string, isToggled: boolean) => {
+  const handleTokenChange = (token: string, isToggled: boolean) => {
     if (isToggled) {
       setSelectedTokens([...selectedTokens, token]);
     } else {
       setSelectedTokens([...selectedTokens.filter((t) => t !== token)]);
     }
   };
+  const handleSliderChange = (value: number) => {
+    setSelectedSlider(value === 1000 ? 999999 : value);
+  };
 
-  const [slider, setSlider] = useState<Number>(300);
+  const [slider, setSlider] = useState<number>(300);
 
   return (
     <Box {...rest}>
@@ -44,7 +49,7 @@ const ListHeader = ({
               <ToggleToken
                 title={token}
                 isToggled={selectedTokens.includes(token)}
-                onToggle={(isToggled) => handleChange(token, isToggled)}
+                onToggle={(isToggled) => handleTokenChange(token, isToggled)}
               />
             </ListItem>
           ))}
@@ -55,7 +60,7 @@ const ListHeader = ({
         <Text fontSize="sm">{slider < 1000 ? `${slider} kr` : 'Viser alt'}</Text>
       </Stack>
       <Stack direction="row">
-        <Slider colorScheme="blue" aria-label="slider-ex-2" marginTop="10px" min={0} max={1000} step={10} defaultValue={300} onChange={val => setSlider(val)}>
+        <Slider colorScheme="blue" aria-label="slider-ex-2" marginTop="10px" min={0} max={1000} step={10} defaultValue={300} onChange={val => setSlider(val)} onChangeEnd={val => handleSliderChange(val)}>
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>

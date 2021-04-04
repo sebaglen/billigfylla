@@ -166,7 +166,8 @@ const filterAlcohol = (
   searchQuery: string,
   alcoholTypes: string[],
   limit: number,
-  offset: number
+  offset: number,
+  maxPrice: number,
 ) =>
   alkohyler
     .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
@@ -174,6 +175,7 @@ const filterAlcohol = (
       if (alcoholTypes.length === 0) return true;
       return alcoholTypes.includes(alko.type);
     })
+    .filter((alko) => alko.price <= maxPrice)
     .slice(offset, limit);
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -189,6 +191,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       typeof req.query.alcoholTypes === 'string'
         ? [req.query.alcoholTypes]
         : req.query.alcoholTypes || [];
+    const maxPrice = req.query.maxPrice ? Number(req.query.maxPrice) : 999999;
 
     console.log('Alkohyler in memory:', cachedAlkohyler.length);
 
@@ -209,7 +212,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                   searchQuery,
                   alcoholTypes,
                   limit,
-                  offset
+                  offset,
+                  maxPrice
                 )
               );
             return;
@@ -224,7 +228,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                   searchQuery,
                   alcoholTypes,
                   limit,
-                  offset
+                  offset,
+                  maxPrice
                 )
               )
           );
@@ -244,7 +249,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(200)
       .json(
-        filterAlcohol(cachedAlkohyler, searchQuery, alcoholTypes, limit, offset)
+        filterAlcohol(cachedAlkohyler, searchQuery, alcoholTypes, limit, offset, maxPrice)
       );
     return;
   }
