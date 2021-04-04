@@ -60,7 +60,7 @@ const Index = () => {
   const { scrollY } = useViewportScroll();
 
   const [enabledAlcoholTypes, setEnabledAlcoholTypes] = useState<string[]>(_tokens);
-  const [maxPrice, setMaxPrice] = useState<number>(300);
+  const [maxPrice, setMaxPrice] = useState<number>(700);
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 400);
   const debouncedAlcoholTypes = useDebounce<string[]>(enabledAlcoholTypes, 400);
 

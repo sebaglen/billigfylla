@@ -38,7 +38,7 @@ const ListHeader = ({
     setSelectedSlider(value === 1000 ? 999999 : value);
   };
 
-  const [slider, setSlider] = useState<number>(300);
+  const [slider, setSlider] = useState<number>(700);
 
   return (
     <Box {...rest}>
@@ -60,7 +60,7 @@ const ListHeader = ({
         <Text fontSize="sm">{slider < 1000 ? `${slider} kr` : 'Viser alt'}</Text>
       </Stack>
       <Stack direction="row">
-        <Slider colorScheme="blue" aria-label="slider-ex-2" marginTop="10px" min={0} max={1000} step={10} defaultValue={300} onChange={val => setSlider(val)} onChangeEnd={val => handleSliderChange(val)}>
+        <Slider colorScheme="blue" aria-label="slider-ex-2" marginTop="10px" min={0} max={1000} step={10} defaultValue={700} onChange={val => setSlider(val)} onChangeEnd={val => handleSliderChange(val)}>
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
