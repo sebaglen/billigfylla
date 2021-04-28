@@ -6,6 +6,7 @@ const VIN_API_KEY = process.env.VINMONOPOLET_API_KEY;
 const FETCH_INTERVAL = 1000 * 60 * 30;
 const MAX_RESULTS = 30000;
 const CACHE_FILE_NAME = 'alko-cache.json';
+const HARDCODED_ALKO_CACHE = 'HARDCODED_ALKO_CACHE.json';
 
 /* Type list:
  * Øl
@@ -112,6 +113,7 @@ const fetchAlko = (apiKey: string, start: number, limit: number) =>
   )
     .then((data) => (data.status === 400 ? [] : data.json()))
     .then((data: APIAlko[]) => {
+      /*
       const alkohyler: Alko[] = data
         .filter((alk) => alk.basic.alcoholContent > 0)
         .map(
@@ -137,7 +139,8 @@ const fetchAlko = (apiKey: string, start: number, limit: number) =>
           }
         )
         .sort(sortByAlkPerNOK);
-      return alkohyler;
+      return alkohyler;*/
+      return HARDCODED_ALKO_CACHE;
     });
 
 const fetchAlkoParallel = (apiKey: string, partitions = 5) => {
@@ -167,7 +170,7 @@ const filterAlcohol = (
   alcoholTypes: string[],
   limit: number,
   offset: number,
-  maxPrice: number,
+  maxPrice: number
 ) =>
   alkohyler
     .filter((alko) => alko.name.match(new RegExp(searchQuery, 'gi')))
@@ -249,7 +252,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(200)
       .json(
-        filterAlcohol(cachedAlkohyler, searchQuery, alcoholTypes, limit, offset, maxPrice)
+        filterAlcohol(
+          cachedAlkohyler,
+          searchQuery,
+          alcoholTypes,
+          limit,
+          offset,
+          maxPrice
+        )
       );
     return;
   }
