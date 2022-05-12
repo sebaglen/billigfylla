@@ -1,5 +1,5 @@
 # Billigfylla
-## A Next JS web app helping you get whasted for cheap
+## A Next JS web app helping you get wasted for cheap
 
 #### You can visit the application on [billigfylla.vercel.app](https://billigfylla.vercel.app/)
 
